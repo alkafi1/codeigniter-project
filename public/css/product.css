@@ -1,0 +1,69 @@
+.card {
+    position: relative; /* Position relative for the child element */
+    transition: border-color 0.3s; /* Smooth transition for the border color */
+    border: 2px solid transparent; /* Default border */
+    overflow: hidden; /* Hide overflow for flip effect */
+}
+
+/* Change border color on hover */
+.card:hover {
+    border-color: #0056b3; /* Change to your desired border color */
+}
+
+/* Flip animation */
+.card-inner {
+    position: absolute; /* Position absolutely to allow flipping */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    transition: transform 0.6s; /* Smooth transition for the flip */
+    transform-style: preserve-3d; /* Preserve 3D for the flip effect */
+}
+
+/* Front and back faces */
+.card-front,
+.card-back {
+    position: absolute; /* Position absolutely within the card */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    backface-visibility: hidden; /* Hide back face when not visible */
+}
+
+/* Back face styling */
+.card-back {
+    transform: rotateY(180deg); /* Rotate back face for the flip */
+}
+
+/* Flip on card hover */
+.card:hover .card-inner {
+    transform: rotateY(180deg); /* Flip effect on hover */
+}
+
+/* Button styles */
+.btn {
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for buttons */
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darken primary button */
+    color: #fff; /* Change text color */
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Darken success button */
+    color: #fff; /* Change text color */
+}
+/* Add custom styles here */
+.pagination .page-link {
+    color: #0d6efd; /* Link color */
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd; /* Active background color */
+    border-color: #0d6efd; /* Active border color */
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d; /* Disabled link color */
+    pointer-events: none; /* Disable click events */
+}
+

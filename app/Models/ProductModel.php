@@ -43,4 +43,24 @@ class ProductModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    // Count all products with optional search
+    public function countAll($search = '')
+    {
+        if (!empty($search)) {
+            $this->like('name', $search);
+        }
+        return $this->countAllResults();
+    }
+
+    // Get products with pagination, search, and sorting
+    public function getProducts($limit, $offset, $search = '', $sort = 'created_at', $order = 'DESC')
+    {
+        if (!empty($search)) {
+            $this->like('name', $search);
+        }
+
+        return $this->orderBy($sort, $order)
+                    ->findAll($limit, $offset); // Fetches products with limit and offset
+    }
 }

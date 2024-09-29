@@ -17,11 +17,11 @@ class Home extends BaseController
     public function index(): string
     {
         $data['products'] = $this->productModel->findAll(); // Fetch all products
-        
+
         // Prepare the view data
         $data['title'] = 'Shop';
-        $data['content'] = view('products/index', $data); // Load the products view
-        
+        $data['content'] = view('shop/shop', $data); // Load the products view
+
         // Return the main layout view
         return view('layouts/main', $data);
     }

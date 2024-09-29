@@ -20,19 +20,41 @@ class ProductController extends BaseController
     public function index()
     {
         try {
-            // Fetch all products, notice the intentional typo here in the method name to simulate a bug
-            $data['products'] = $this->productModel->findAl(); // This should cause an error
+            // Fetch search query and sorting parameters
+            $search = $this->request->getGet('search') ?? '';
+            $sort = $this->request->getGet('sort') ?? 'created_at';
+            $order = $this->request->getGet('order') ?? 'DESC';
+
+            // Configure pagination
+            $perPage = 10; // Products per page
+            $page = $this->request->getGet('page') ?? 1;
+            $offset = ($page - 1) * $perPage;
+
+            // Get products with search, sorting, and pagination
+            $data['products'] = $this->productModel->getProducts($perPage, $offset, $search, $sort, $order);
+            $data['total'] = $this->productModel->countAll($search);
+
+            // Prepare pagination links
+            $data['pagination'] = $this->createPagination($page, $data['total'], $perPage);
 
             // Prepare the view data
-            $data['title'] = 'ABC'; // Set the page title
+            $data['title'] = 'Product List'; // Set the page title
+            $data['search'] = $search; // For keeping the search term in the view
+            $data['sort'] = $sort; // For keeping the sort column in the view
+            $data['order'] = $order; // For keeping the sort order in the view
             $data['content'] = view('products/index', $data); // Load the products view
 
             // Return the main layout view
             return view('layouts/main', $data);
         } catch (\Throwable $e) {
             // Catch the error and display it in the browser
-            return $this->response->setBody("<h1>An error occurred:</h1><pre>" . $e->getMessage() . "</pre>");
+            return $this->response->setBody("<h1>An error occurred:</h1><pre>" . esc($e->getMessage()) . "</pre>");
         }
+    }
+    private function createPagination($currentPage, $totalRows, $perPage)
+    {
+        $pager = service('pager');
+        return $pager->makeLinks($currentPage, $perPage, $totalRows);
     }
 
     // Show form for creating a new product
@@ -47,31 +69,39 @@ class ProductController extends BaseController
     public function store()
     {
         // Validate input before saving
-        if ($this->validateInput()) {
-            // Save the product data
-            $this->productModel->save([
-                'name' => $this->request->getVar('name'),
-                'price' => $this->request->getVar('price'),
-                'description' => $this->request->getVar('description'),
-            ]);
-            return redirect()->to('/products')->with('success', 'Product created successfully.');
-        } else {
+        if (!$this->validateInput()) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
+
+        // Save the product data if validation passes
+        $this->productModel->save([
+            'name' => $this->request->getVar('name'),
+            'price' => $this->request->getVar('price'),
+            'description' => $this->request->getVar('description'),
+        ]);
+
+        return redirect()->to('/products')->with('success', 'Product created successfully.');
     }
 
     // Show the specified product
     public function show($id)
     {
+        // Retrieve the product by its ID
         $data['product'] = $this->productModel->find($id);
 
+        // Check if product exists
         if (!$data['product']) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Product not found');
         }
 
-        $data['title'] = $data['product']['name']; // Set the title to the product name
-        $data['content'] = view('products/show', $data); // Load the show view
-        return view('layouts/main', $data);
+        // Set the title dynamically
+        $data['title'] = $data['product']['name'];
+
+        // Load the main layout with the content view
+        return view('layouts/main', [
+            'content' => view('products/show', $data),
+            'title' => $data['title']
+        ]);
     }
 
     // Show form for editing a product
