@@ -102,6 +102,9 @@ class ComposerStaticInite5a8a687cb8a8960a615417697e8b4a5
     public static $classMap = array (
         'App\\Controllers\\BaseController' => __DIR__ . '/../..' . '/app/Controllers/BaseController.php',
         'App\\Controllers\\Home' => __DIR__ . '/../..' . '/app/Controllers/Home.php',
+        'App\\Controllers\\ProductController' => __DIR__ . '/../..' . '/app/Controllers/ProductController.php',
+        'App\\Database\\Seeds\\ProductsSeeder' => __DIR__ . '/../..' . '/app/Database/Seeds/ProductsSeeder.php',
+        'App\\Models\\ProductModel' => __DIR__ . '/../..' . '/app/Models/ProductModel.php',
         'CodeIgniter\\API\\ResponseTrait' => __DIR__ . '/..' . '/codeigniter4/framework/system/API/ResponseTrait.php',
         'CodeIgniter\\Autoloader\\Autoloader' => __DIR__ . '/..' . '/codeigniter4/framework/system/Autoloader/Autoloader.php',
         'CodeIgniter\\Autoloader\\FileLocator' => __DIR__ . '/..' . '/codeigniter4/framework/system/Autoloader/FileLocator.php',
